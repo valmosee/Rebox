@@ -13,6 +13,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        var _UserSession : String = ""
+    }
     lateinit var db: FirebaseFirestore
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -26,11 +29,14 @@ class MainActivity : AppCompatActivity() {
         var _btnAdd = findViewById<Button>(R.id.btnAdd)
 
         _btnAdd.setOnClickListener {
-            var baru = ClsUser(
-                "0",
-                "Claudia",
-                "234",
-                "Claudia Harahap"
+            var baru = User(
+                "claudia@gmail.com",
+                "Cloud",
+                "Claudia Harahap",
+                "123456",
+                "123456",
+                "Jl Melati No.25",
+                ""
             )
             // Add a new document with a generated ID
             db.collection("users")
