@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout_register"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegisterFragment">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="56dp"
+        android:text="Register"
+        android:textColor="#454141"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:layout_width="366dp"
+        android:layout_height="489dp"
+        android:layout_marginTop="116dp"
+        android:background="#0C404040"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/name_logo_register"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/user_logo" />
+
+            <EditText
+                android:id="@+id/registerName"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Full Name"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="40dp">
+
+            <TextView
+                android:id="@+id/notificationErrorNameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/email_logo_register2"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/email_logo" />
+
+            <EditText
+                android:id="@+id/registerUsername"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Username"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="40dp">
+
+            <TextView
+                android:id="@+id/notificationErrorUsernameRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/email_logo_register"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/email_logo" />
+
+            <EditText
+                android:id="@+id/registerEmail"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Email"
+                android:inputType="text" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="40dp">
+
+            <TextView
+                android:id="@+id/notificationErrorEmailRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/phone_logo_register"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/user_phone_logo" />
+
+            <EditText
+                android:id="@+id/registerPhone"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Phone Number"
+                android:inputType="number" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="40dp">
+
+            <TextView
+                android:id="@+id/notificationErrorPhoneRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/password_logo_register"
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/user_password_logo" />
+
+            <EditText
+                android:id="@+id/registerPassword"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Password"
+                android:inputType="text|textPassword" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="300dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="40dp">
+
+            <TextView
+                android:id="@+id/notificationErrorPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057" />
+        </FrameLayout>
+
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="300dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#2196F3"
+            android:text="REGISTER" />
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="88dp"
+        android:text="Sudah punya akun?"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/btnGoLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="68dp"
+        android:text="LOGIN"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
