@@ -5,7 +5,7 @@ class User(
     var username: String,
     var namalengkap : String,
     var password: String,
-    var confirmpass: String,
+    var phonenumber : String,
     var alamat : String,
     var foto : String) {
 }

@@ -8,9 +8,10 @@
     tools:context=".RegisterFragment">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="36dp"
         android:text="Register"
         android:textColor="#454141"
         android:textSize="34sp"
@@ -21,14 +22,18 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
-        android:layout_width="366dp"
-        android:layout_height="489dp"
-        android:layout_marginTop="116dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
         android:background="#0C404040"
         android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
 
         <LinearLayout
             android:layout_width="300dp"
@@ -38,14 +43,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/name_logo_register"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/user_logo" />
 
             <EditText
-                android:id="@+id/registerName"
+                android:id="@+id/rgsName"
                 android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -60,7 +64,7 @@
             android:layout_marginLeft="40dp">
 
             <TextView
-                android:id="@+id/notificationErrorNameRegister"
+                android:id="@+id/nENameRegister"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#FF6057"
@@ -74,14 +78,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/email_logo_register2"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/email_logo" />
 
             <EditText
-                android:id="@+id/registerUsername"
+                android:id="@+id/rgsUsername"
                 android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -96,7 +99,7 @@
             android:layout_marginLeft="40dp">
 
             <TextView
-                android:id="@+id/notificationErrorUsernameRegister"
+                android:id="@+id/nEUsernameRegister"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#FF6057"
@@ -110,14 +113,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/email_logo_register"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/email_logo" />
 
             <EditText
-                android:id="@+id/registerEmail"
+                android:id="@+id/rgsEmail"
                 android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -132,7 +134,7 @@
             android:layout_marginLeft="40dp">
 
             <TextView
-                android:id="@+id/notificationErrorEmailRegister"
+                android:id="@+id/nEEmailRegister"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#FF6057"
@@ -146,14 +148,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/phone_logo_register"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/user_phone_logo" />
 
             <EditText
-                android:id="@+id/registerPhone"
+                android:id="@+id/rgsPhone"
                 android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -168,7 +169,7 @@
             android:layout_marginLeft="40dp">
 
             <TextView
-                android:id="@+id/notificationErrorPhoneRegister"
+                android:id="@+id/nEPhoneRegister"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:textColor="#FF6057"
@@ -182,14 +183,13 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/password_logo_register"
                 android:layout_width="50dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:src="@drawable/user_password_logo" />
 
             <EditText
-                android:id="@+id/registerPassword"
+                android:id="@+id/rgsPassword"
                 android:layout_width="290dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -204,10 +204,48 @@
             android:layout_marginLeft="40dp">
 
             <TextView
-                android:id="@+id/notificationErrorPasswordRegister"
+                android:id="@+id/nEPasswordRegister"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="#FF6057" />
+                android:textColor="#FF6057"
+                android:visibility="gone" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="56dp"
+            android:layout_marginLeft="40dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:src="@drawable/user_password_logo" />
+
+            <EditText
+                android:id="@+id/rgsConfPassword"
+                android:layout_width="290dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ems="10"
+                android:hint="Confirm Password"
+                android:inputType="text|textPassword" />
+        </LinearLayout>
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="40dp"
+            android:layout_weight="1"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/nEConfPasswordRegister"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:textColor="#FF6057"
+                android:visibility="gone" />
         </FrameLayout>
 
         <Button
@@ -222,12 +260,12 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="88dp"
         android:text="Sudah punya akun?"
         android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/btnGoLogin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
@@ -236,7 +274,7 @@
         android:id="@+id/btnGoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="68dp"
+        android:layout_marginBottom="36dp"
         android:text="LOGIN"
         android:textSize="16sp"
         android:textStyle="bold"

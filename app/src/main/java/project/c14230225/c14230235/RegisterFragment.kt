@@ -5,51 +5,92 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import android.widget.Toast
+import androidx.navigation.fragment.findNavController
+import com.google.firebase.firestore.FirebaseFirestore
+import project.c14230225.c14230235.databinding.FragmentLoginBinding
+import project.c14230225.c14230235.databinding.FragmentRegisterBinding
 
-/**
- * A simple [Fragment] subclass.
- * Use the [RegisterFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class RegisterFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+    var binding: FragmentRegisterBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    }
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        binding = FragmentRegisterBinding.inflate(inflater, container, false)
+
+        return binding!!.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        val db = FirebaseFirestore.getInstance()
+
+        binding!!.btnRegister.setOnClickListener {
+            val _rName = binding!!.rgsName.text.toString().trim()
+            val _rUName = binding!!.rgsUsername.text.toString().trim()
+            val _rEmail = binding!!.rgsEmail.text.toString().trim()
+            val _rPhone = binding!!.rgsPhone.text.toString().trim()
+            val _rPassword = binding!!.rgsPassword.text.toString().trim()
+            val _rConfPassword = binding!!.rgsConfPassword.text.toString().trim()
+
+            if (_rUName.isEmpty() || _rPassword.isEmpty()) {
+                Toast.makeText(context, "Username dan password wajib diisi", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (_rPassword != _rConfPassword) {
+                Toast.makeText(context, "Password dan Confirm Password tidak sama", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            val newUser = User(
+                _rEmail,
+                _rUName,
+                _rName,
+                _rPassword,
+                _rPhone,
+                "",
+                "",
+            )
+
+            db.collection("users")
+                .document(_rEmail)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        Toast.makeText(context, "Email sudah terdaftar", Toast.LENGTH_SHORT).show()
+                    } else {
+                        // Simpan dengan ID = email
+                        db.collection("users")
+                            .document(_rEmail)
+                            .set(newUser)
+                            .addOnSuccessListener {
+                                Toast.makeText(context, "Registrasi berhasil", Toast.LENGTH_SHORT).show()
+                                findNavController().popBackStack()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(context, "Gagal menyimpan data", Toast.LENGTH_SHORT).show()
+                            }
+                    }
+                }
+        }
+
+        binding!!.btnGoLogin.setOnClickListener {
+            findNavController().popBackStack()
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_register, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment RegisterFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic fun newInstance(param1: String, param2: String) =
-                RegisterFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ARG_PARAM1, param1)
-                        putString(ARG_PARAM2, param2)
-                    }
-                }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        binding = null
     }
 }
