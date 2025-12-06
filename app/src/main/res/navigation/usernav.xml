@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/usernav"
+    app:startDestination="@id/menuhome">
+
+    <fragment
+        android:id="@+id/menuhome"
+        android:name="project.c14230225.c14230235.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_menuhome_to_uploadProductFragment"
+            app:destination="@id/uploadProductFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/menutransaksi"
+        android:name="project.c14230225.c14230235.TransaksiFragment"
+        android:label="fragment_transaksi"
+        tools:layout="@layout/fragment_transaksi" />
+    <fragment
+        android:id="@+id/menuprofile"
+        android:name="project.c14230225.c14230235.ProfileFragment"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/uploadProductFragment"
+        android:name="project.c14230225.c14230235.UploadProductFragment"
+        android:label="fragment_upload_product"
+        tools:layout="@layout/fragment_upload_product" />
+</navigation>
