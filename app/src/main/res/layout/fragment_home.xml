@@ -10,40 +10,110 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--        <Button-->
-        <!--            android:id="@+id/btnTambah"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="wrap_content"-->
-        <!--            android:layout_marginStart="16dp"-->
-        <!--            android:layout_marginTop="16dp"-->
-        <!--            android:text="Tambah Sepatu"-->
-        <!--            app:layout_constraintStart_toStartOf="parent"-->
-        <!--            app:layout_constraintTop_toTopOf="parent" />-->
-
+        <!-- Filter Search Bar -->
         <LinearLayout
-            android:id="@+id/linearLayout2"
+            android:id="@+id/filterSearchContainer"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:background="#00B0FF"
-            android:orientation="horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:background="@android:color/white"
+            android:elevation="4dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/etSearch"
-                android:layout_width="wrap_content"
+            <!-- Search Bar -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/searchLayout"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="32dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="text"
-                android:text="Name" />
+                android:hint="Cari sepatu..."
+                app:startIconDrawable="@android:drawable/ic_menu_search"
+                app:endIconMode="clear_text"
+                app:boxBackgroundMode="outline"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Filter Button and Active Filters -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="12dp"
+                android:gravity="center_vertical">
+
+                <!-- Filter Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFilter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter"
+                    app:icon="@android:drawable/ic_menu_sort_by_size"
+                    app:iconGravity="start"
+                    style="@style/Widget.Material3.Button.OutlinedButton" />
+
+                <!-- Active Filter Count Badge -->
+                <TextView
+                    android:id="@+id/tvActiveFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="3 filter aktif"
+                    android:textSize="12sp"
+                    android:textColor="#0084d5"
+                    android:visibility="gone" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Clear All Filters Button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnClearFilters"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Clear"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    style="@style/Widget.Material3.Button.TextButton" />
+            </LinearLayout>
+
+            <!-- Active Filter Chips Container -->
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chipGroupActiveFilters"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:singleLine="false"
+                android:visibility="gone" />
 
         </LinearLayout>
 
+        <!-- RecyclerView for Products -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProduct"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:paddingTop="8dp"
+            android:clipToPadding="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/filterSearchContainer" />
+
+        <!-- Floating Action Button for Cart -->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/btnCart"
             android:layout_width="wrap_content"
@@ -51,17 +121,9 @@
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
             android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="@+id/rvProduct"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@drawable/shopping_cart_white" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvProduct"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout2" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
