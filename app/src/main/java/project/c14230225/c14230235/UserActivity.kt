@@ -25,7 +25,8 @@ class UserActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             view.updatePadding(
-                top = systemBars.top
+                top = systemBars.top,
+                bottom = systemBars.bottom
             )
             insets
         }
@@ -35,6 +36,5 @@ class UserActivity : AppCompatActivity() {
 
         val navController = navHostFragment.navController
         binding.bottomNavView.setupWithNavController(navController)
-
     }
 }

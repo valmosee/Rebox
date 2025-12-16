@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_home" >
     </fragment>
     <fragment
-        android:id="@+id/menutransaksi"
+        android:id="@+id/menuhistorytransaksi"
         android:name="project.c14230225.c14230235.TransaksiFragment"
         android:label="fragment_transaksi"
         tools:layout="@layout/fragment_transaksi" />
