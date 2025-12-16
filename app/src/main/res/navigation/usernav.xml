@@ -16,10 +16,26 @@
         android:name="project.c14230225.c14230235.TransaksiFragment"
         android:label="fragment_transaksi"
         tools:layout="@layout/fragment_transaksi" />
+
     <fragment
         android:id="@+id/menuprofile"
         android:name="project.c14230225.c14230235.ProfileFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_profile" >
+        <action
+            android:id="@+id/action_menuprofile_to_editProfileFragment"
+            app:destination="@id/editProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editProfileFragment"
+        android:name="project.c14230225.c14230235.EditProfileFragment"
+        android:label="EditProfile"
+        tools:layout="@layout/fragment_edit_profile" >
+
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+
     </fragment>
 </navigation>

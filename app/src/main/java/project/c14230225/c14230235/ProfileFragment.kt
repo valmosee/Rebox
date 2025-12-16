@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,8 +68,9 @@ class ProfileFragment : Fragment() {
             when (menuItem.itemId) {
                 R.id.nav_edit_profile -> {
                     Toast.makeText(requireContext(), "Edit Profile clicked", Toast.LENGTH_SHORT).show()
-                    // Navigate to edit profile screen
-                    // findNavController().navigate(R.id.action_profile_to_editProfile)
+                    val action = ProfileFragmentDirections
+                        .actionMenuprofileToEditProfileFragment("cloudia@gmail.com")
+                    findNavController().navigate(action)
                 }
                 R.id.nav_change_password -> {
                     Toast.makeText(requireContext(), "Change Password clicked", Toast.LENGTH_SHORT).show()
@@ -84,12 +87,27 @@ class ProfileFragment : Fragment() {
         }
 
         // Load user profile data
-        loadUserProfile()
+        loadUserProfile(requireActivity().intent.getStringExtra("email") ?: "")
+
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                        drawerLayout.closeDrawer(GravityCompat.START)
+                    } else {
+                        // Let NavController handle back navigation
+                        isEnabled = false
+                        requireActivity().onBackPressed()
+                    }
+                }
+            }
+        )
     }
 
-    private fun loadUserProfile() {
+    private fun loadUserProfile(email: String) {
         db.collection("users")
-            .document("tim@gmail.com")
+            .document(email)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
@@ -129,15 +147,5 @@ class ProfileFragment : Fragment() {
             .addOnFailureListener { e ->
                 Toast.makeText(requireContext(), "Error loading profile: ${e.message}", Toast.LENGTH_SHORT).show()
             }
-    }
-
-    // Handle back button to close drawer
-    fun onBackPressed(): Boolean {
-        return if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START)
-            true
-        } else {
-            false
-        }
     }
 }

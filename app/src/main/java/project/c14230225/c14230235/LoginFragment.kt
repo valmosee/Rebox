@@ -63,6 +63,7 @@ class LoginFragment : Fragment() {
                         Toast.makeText(context, "Login berhasil", Toast.LENGTH_SHORT).show()
 
                         val intent = Intent(requireContext(), UserActivity::class.java)
+                        intent.putExtra("email", email)
                         startActivity(intent)
                     } else {
                         Toast.makeText(context, "Password salah", Toast.LENGTH_SHORT).show()
