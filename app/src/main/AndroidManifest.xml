@@ -11,10 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rebox">
-        <activity
-            android:name=".StoreActivity"
-            android:exported="false" />
-        <activity android:name=".UserActivity" />
+                <activity android:name=".UserActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true">

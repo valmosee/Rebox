@@ -40,7 +40,7 @@ class LoginFragment : Fragment() {
 
         binding!!.btnLogin.setOnClickListener {
             binding!!.loginEmail.setText("cloudia@gmail.com")
-            binding!!.loginPassword.setText("123456")
+            binding!!.loginPassword.setText("123456789")
 
             val email = binding!!.loginEmail.text.toString().trim()
             val password = binding!!.loginPassword.text.toString().trim()

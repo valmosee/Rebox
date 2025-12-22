@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.get
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.cloudinary.Cloudinary
 import com.cloudinary.utils.ObjectUtils
 import com.google.firebase.firestore.FirebaseFirestore
@@ -66,14 +67,13 @@ class UploadSepatuFragment : Fragment() {
                     val _upDeskripsi = binding!!.upDeskripsi.text.toString().trim()
 
                     var newSepatu = Sepatu(
-                        "",
-                        MainActivity._UserSession.email,
                         _upNama,
                         _upJenis,
                         _upUkuran,
                         _upHarga,
                         _upDeskripsi,
-                        url
+                        url,
+                        arguments?.getString("email") ?: ""
                     )
 
                     db.collection("products")
@@ -83,6 +83,7 @@ class UploadSepatuFragment : Fragment() {
                                 context, "Sukses : Product added with ID: ${documentReference.id}",
                                 Toast.LENGTH_SHORT
                             ).show()
+                            findNavController().popBackStack()
                         }
                         .addOnFailureListener { e ->
                             Toast.makeText(
