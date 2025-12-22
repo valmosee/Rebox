@@ -34,13 +34,20 @@
         <action
             android:id="@+id/action_menuprofile_to_editProfileFragment"
             app:destination="@id/editProfileFragment" />
+        <action
+            android:id="@+id/action_menuprofile_to_storeHomeFragment"
+            app:destination="@id/storeHomeFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/UploadSepatuFragment"
         android:name="project.c14230225.c14230235.UploadSepatuFragment"
         android:label="fragment_upload_sepatu"
-        tools:layout="@layout/fragment_upload_sepatu" />
+        tools:layout="@layout/fragment_upload_sepatu" >
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/chattingFragment"
         android:name="project.c14230225.c14230235.ChattingFragment"
@@ -70,6 +77,18 @@
                 android:name="user2"
                 app:argType="string" />
         </action>
+    </fragment>
+    <fragment
+        android:id="@+id/storeHomeFragment"
+        android:name="project.c14230225.c14230235.storeHomeFragment"
+        android:label="fragment_store"
+        tools:layout="@layout/fragment_store" >
+        <action
+            android:id="@+id/action_storeHomeFragment_to_UploadSepatuFragment"
+            app:destination="@id/UploadSepatuFragment" />
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"

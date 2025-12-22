@@ -76,9 +76,9 @@ class ProfileFragment : Fragment() {
                 R.id.nav_my_store -> {
                     Toast.makeText(requireContext(), "My Store clicked", Toast.LENGTH_SHORT).show()
                     // Navigate to my store screen
-                     var intent = Intent(requireContext(), StoreActivity::class.java)
-                    intent.putExtra("email", requireActivity().intent.getStringExtra("email"))
-                    startActivity(intent)
+                    val action = ProfileFragmentDirections
+                        .actionMenuprofileToStoreHomeFragment(requireActivity().intent.getStringExtra("email") ?: "")
+                    findNavController().navigate(action)
                 }
                 R.id.nav_change_password -> {
                     Toast.makeText(requireContext(), "Change Password clicked", Toast.LENGTH_SHORT).show()

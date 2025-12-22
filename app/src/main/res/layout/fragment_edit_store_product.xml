@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".UploadSepatuFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/upImage"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            android:layout_marginTop="32dp"
+            android:scaleType="fitXY"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/product_icon" />
+
+        <Button
+            android:id="@+id/btnAddImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="@color/material_dynamic_neutral70"
+            android:text="Add Image"
+            app:layout_constraintEnd_toEndOf="@+id/upImage"
+            app:layout_constraintStart_toStartOf="@+id/upImage"
+            app:layout_constraintTop_toBottomOf="@+id/upImage" />
+
+        <EditText
+            android:id="@+id/upNama"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="24dp"
+            android:ems="10"
+            android:hint="Nama sepatu"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnAddImage" />
+
+        <Spinner
+            android:id="@+id/upJenis"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/upNama"
+            app:layout_constraintStart_toStartOf="@+id/upNama"
+            app:layout_constraintTop_toBottomOf="@+id/upNama" />
+
+        <EditText
+            android:id="@+id/upUkuran"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Ukuran Sepatu"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="@+id/upJenis"
+            app:layout_constraintStart_toStartOf="@+id/upJenis"
+            app:layout_constraintTop_toBottomOf="@+id/upJenis" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Rp."
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/upHarga"
+            app:layout_constraintStart_toStartOf="@+id/upUkuran"
+            app:layout_constraintTop_toTopOf="@+id/upHarga" />
+
+        <EditText
+            android:id="@+id/upHarga"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="Harga Sepatu"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="@+id/upUkuran"
+            app:layout_constraintStart_toEndOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/upUkuran" />
+
+        <EditText
+            android:id="@+id/upDeskripsi"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="17dp"
+            android:ems="10"
+            android:hint="Deskripsi (Bahan, Tahun pembelian, Umur Barang)"
+            android:inputType="textMultiLine"
+            android:gravity="top|start"
+            android:minLines="4"
+            app:layout_constraintBottom_toTopOf="@+id/btnUploadSepatu"
+            app:layout_constraintEnd_toEndOf="@+id/upHarga"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toBottomOf="@+id/upHarga" />
+
+        <Button
+            android:id="@+id/btnUploadSepatu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:text="Add Product"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</FrameLayout>

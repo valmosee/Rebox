@@ -10,4 +10,5 @@ data class Sepatu(
     var deskripsi: String = "",
     var image: String = "",
     var sellerId: String = "",
+    var sellerEmail: String = "",
 )
