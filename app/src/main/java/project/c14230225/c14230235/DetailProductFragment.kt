@@ -1,5 +1,6 @@
 package project.c14230225.c14230235
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,6 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import project.c14230225.c14230235.databinding.FragmentDetailProductBinding
 
@@ -17,6 +20,8 @@ class DetailProductFragment : Fragment() {
     private var productDetail: Sepatu? = null
     private var _binding: FragmentDetailProductBinding? = null
     private val binding get() = _binding!!
+    private lateinit var db: FirebaseFirestore
+    private var currentUserEmail: String = ""
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +34,10 @@ class DetailProductFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // 1. Get Product ID safely from arguments
+        db = FirebaseFirestore.getInstance()
+        currentUserEmail = requireActivity().intent.getStringExtra("email") ?: ""
+
+        // Get Product ID from arguments
         productId = arguments?.getString("productId") ?: ""
 
         if (productId.isNotEmpty()) {
@@ -39,7 +47,7 @@ class DetailProductFragment : Fragment() {
             findNavController().popBackStack()
         }
 
-        // 2. Setup Buttons
+        // Setup Buttons
         binding.btnChat.setOnClickListener {
             val sellerUsername = productDetail?.username
             if (!sellerUsername.isNullOrEmpty()) {
@@ -52,20 +60,18 @@ class DetailProductFragment : Fragment() {
             }
         }
 
-        binding.btnCart.setOnClickListener {
-            Toast.makeText(requireContext(), "Added to Cart!", Toast.LENGTH_SHORT).show()
+        // ✅ Updated Buy Button - sesuaikan dengan ID di XML
+        binding.btnBuy.setOnClickListener {
+            showBuyConfirmationDialog()
         }
     }
 
     private fun loadProductData(id: String) {
-        val db = FirebaseFirestore.getInstance()
-
         db.collection("products")
             .document(id)
             .get()
             .addOnSuccessListener { document ->
                 if (document != null && document.exists()) {
-                    // Map data to your Sepatu object
                     productDetail = Sepatu(
                         id = document.id,
                         username = document.getString("username") ?: "",
@@ -76,15 +82,136 @@ class DetailProductFragment : Fragment() {
                         deskripsi = document.getString("deskripsi") ?: "",
                         image = document.getString("image") ?: ""
                     )
-
                     updateUI()
+                    checkIfAlreadyPurchased()
                 } else {
-                    Log.d("Firestore", "No such document")
+                    Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show()
+                    findNavController().popBackStack()
                 }
             }
             .addOnFailureListener { exception ->
                 Log.e("Firestore", "Error getting document: ", exception)
+                Toast.makeText(requireContext(), "Error loading product", Toast.LENGTH_SHORT).show()
             }
+    }
+
+    private fun checkIfAlreadyPurchased() {
+        // Cek apakah user sudah membeli produk ini
+        db.collection("transactions")
+            .whereEqualTo("buyerEmail", currentUserEmail)
+            .whereEqualTo("productId", productId)
+            .whereEqualTo("status", "completed")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    // Produk sudah dibeli
+                    binding.btnBuy.isEnabled = false
+                    binding.btnBuy.text = "Sudah Dibeli"
+                    binding.btnBuy.alpha = 0.5f
+                }
+            }
+    }
+
+    private fun showBuyConfirmationDialog() {
+        productDetail?.let { product ->
+            AlertDialog.Builder(requireContext())
+                .setTitle("Konfirmasi Pembelian")
+                .setMessage("Apakah Anda yakin ingin membeli ${product.nama} seharga ${product.harga}?")
+                .setPositiveButton("Beli") { _, _ ->
+                    processPurchase(product)
+                }
+                .setNegativeButton("Batal", null)
+                .show()
+        }
+    }
+
+    private fun processPurchase(product: Sepatu) {
+        // Show loading
+        binding.btnBuy.isEnabled = false
+        binding.btnBuy.text = "Memproses..."
+
+        // 1. Create transaction record
+        val transactionId = db.collection("transactions").document().id
+        val transaction = Transaction(
+            id = transactionId,
+            buyerEmail = currentUserEmail,
+            buyerUsername = MainActivity._UserSession.username,
+            productId = product.id,
+            productName = product.nama,
+            productImage = product.image,
+            productPrice = product.harga,
+            productSize = product.ukuran,
+            sellerUsername = product.username,
+            purchaseDate = Timestamp.now(),
+            status = "completed"
+        )
+
+        // 2. Save transaction to Firestore
+        db.collection("transactions")
+            .document(transactionId)
+            .set(transaction)
+            .addOnSuccessListener {
+                // 3. Add product to user's purchased list
+                db.collection("users")
+                    .document(currentUserEmail)
+                    .update("purchasedProducts", FieldValue.arrayUnion(product.id))
+                    .addOnSuccessListener {
+                        // 4. Mark product as sold
+                        markProductAsSold(product.id)
+                    }
+                    .addOnFailureListener { e ->
+                        // If field doesn't exist, create it
+                        db.collection("users")
+                            .document(currentUserEmail)
+                            .update(mapOf("purchasedProducts" to listOf(product.id)))
+                            .addOnSuccessListener {
+                                markProductAsSold(product.id)
+                            }
+                            .addOnFailureListener {
+                                showPurchaseError(e.message)
+                            }
+                    }
+            }
+            .addOnFailureListener { e ->
+                showPurchaseError(e.message)
+            }
+    }
+
+    private fun markProductAsSold(productId: String) {
+        db.collection("products")
+            .document(productId)
+            .update("status", "sold")
+            .addOnSuccessListener {
+                showPurchaseSuccess()
+            }
+            .addOnFailureListener { e ->
+                // Even if this fails, transaction is still recorded
+                Log.e("Purchase", "Failed to mark as sold: ${e.message}")
+                showPurchaseSuccess()
+            }
+    }
+
+    private fun showPurchaseSuccess() {
+        Toast.makeText(requireContext(), "Pembelian berhasil!", Toast.LENGTH_LONG).show()
+
+        // Update UI
+        binding.btnBuy.text = "Sudah Dibeli"
+        binding.btnBuy.alpha = 0.5f
+
+        // Navigate back to home
+        findNavController().popBackStack()
+    }
+
+    private fun showPurchaseError(message: String?) {
+        Toast.makeText(
+            requireContext(),
+            "Pembelian gagal: ${message ?: "Unknown error"}",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        // Reset button
+        binding.btnBuy.isEnabled = true
+        binding.btnBuy.text = "Add To Cart"
     }
 
     private fun updateUI() {
@@ -93,10 +220,7 @@ class DetailProductFragment : Fragment() {
             binding.tvPrice.text = product.harga
             binding.tvDeskripsi.text = product.deskripsi
 
-            // Set the Size text or handle size buttons here
-            // Example: binding.btnSize38.text = product.ukuran
-
-            // Load Image using Glide
+            // Load Image
             if (product.image.isNotEmpty()) {
                 Glide.with(this)
                     .load(product.image)

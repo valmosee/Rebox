@@ -11,11 +11,12 @@
         android:layout_height="match_parent">
 
         <!-- Scroll Area -->
-
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollContent"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,66 +24,78 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="16dp">
 
                 <!-- Image Produk -->
-                <ImageView
-                    android:id="@+id/imageProduct"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="260dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher_background" />
-
-                <!-- Harga -->
-                <LinearLayout
-                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:orientation="horizontal">
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="4dp">
 
-                    <TextView
-                        android:id="@+id/TextView"
+                    <ImageView
+                        android:id="@+id/imageProduct"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Rp "
-                        android:textColor="@android:color/holo_red_light"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="1.655.000"
-                        android:textColor="@android:color/holo_red_light"
-                        android:textSize="22sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
+                        android:layout_height="300dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_launcher_background" />
+                </androidx.cardview.widget.CardView>
 
                 <!-- Nama Produk -->
                 <TextView
                     android:id="@+id/tvProductName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Nike Air Max 2024"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
+
+                <!-- Harga -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Nama Sepatu"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:orientation="horizontal">
 
-                <!-- Rating -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rp "
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
 
-                <!-- Size -->
+                    <TextView
+                        android:id="@+id/tvPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="1.655.000"
+                        android:textColor="@android:color/holo_red_light"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/darker_gray"
+                    android:alpha="0.2" />
+
+                <!-- Size Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="SIZE"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -94,79 +107,94 @@
                         android:id="@+id/btnSize38"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="38" />
+                        android:text="38"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
                     <Button
                         android:id="@+id/btnSize39"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="39" />
+                        android:text="39"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
                     <Button
                         android:id="@+id/btnSize40"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="40" />
+                        android:text="40"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
                 </LinearLayout>
 
-                <!-- Deskripsi -->
+                <!-- Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@android:color/darker_gray"
+                    android:alpha="0.2" />
+
+                <!-- Deskripsi Section -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="DESKRIPSI"
                     android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black" />
 
                 <TextView
                     android:id="@+id/tvDeskripsi"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:gravity="start|top"
-                    android:hint="Isi deskripsi"
-                    android:textSize="14sp" />
+                    android:text="Deskripsi produk akan muncul di sini..."
+                    android:textSize="14sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:lineSpacingExtra="4dp" />
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnChat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="8dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            app:layout_constraintBottom_toTopOf="@+id/btnCart"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/btnCart"
-            app:srcCompat="@drawable/icon_chat" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/btnCart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="24dp"
-            android:layout_weight="1"
-            android:clickable="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/shopping_cart_white" />
-
-        <Button
-            android:id="@+id/button"
+        <!-- Bottom Action Container -->
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_margin="16dp"
-            android:text="Add To Cart"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:orientation="horizontal"
+            android:padding="16dp"
+            android:background="@android:color/white"
+            android:elevation="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/scrollContent" />
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Chat FAB -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="12dp"
+                app:fabSize="normal"
+                app:srcCompat="@drawable/icon_chat" />
+
+            <!-- Buy Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnBuy"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="Add To Cart"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:cornerRadius="8dp"
+                app:icon="@android:drawable/ic_input_add"
+                app:iconGravity="textStart" />
+
+        </LinearLayout>
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
