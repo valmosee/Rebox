@@ -1,6 +1,9 @@
 package project.c14230225.c14230235
 
+import android.content.Context
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,11 +12,18 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.cloudinary.Cloudinary
+import com.cloudinary.utils.ObjectUtils
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import project.c14230225.c14230235.databinding.FragmentEditProfileBinding
 import project.c14230225.c14230235.databinding.FragmentRegisterBinding
 
@@ -36,6 +46,8 @@ class EditProfileFragment : Fragment() {
     private lateinit var db : FirebaseFirestore
     private lateinit var binding: FragmentEditProfileBinding
     private lateinit var originalEmail: String
+    private var pickedUri: Uri? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,14 +85,36 @@ class EditProfileFragment : Fragment() {
                 alamat = binding.etAddress.text.toString(),
                 foto = binding.ivProfilePicture.toString()
             )
+            viewLifecycleOwner.lifecycleScope.launch {
+                var imageUrl: String? = null
 
-            editProfile(db, updatedUser)
-                .addOnSuccessListener {
-                    findNavController().popBackStack()
+                // 1. Upload to Cloudinary if a new image was picked
+                pickedUri?.let {
+                    imageUrl = uploadFileToCloudinary(requireContext(), it)
                 }
-                .addOnFailureListener {
-                    Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show()
-                }
+
+                // 2. Prepare user data
+                val updatedUser = User(
+                    email = binding.etEmail.text.toString(),
+                    username = binding.etUsername.text.toString(),
+                    namalengkap = binding.etFullName.text.toString(),
+                    password = "PASSWORD",
+                    phonenumber = binding.etPhoneNumber.text.toString(),
+                    alamat = binding.etAddress.text.toString(),
+                    foto = "" // This will be handled by imageUrl
+                )
+
+                // 3. Save to Firestore
+                editProfile(db, updatedUser, imageUrl)
+                    .addOnSuccessListener {
+                        Toast.makeText(requireContext(), "Profile updated!", Toast.LENGTH_SHORT).show()
+                        findNavController().popBackStack()
+                    }
+                    .addOnFailureListener {
+                        binding.btnSave.isEnabled = true
+                        Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show()
+                    }
+            }
         }
     }
 
@@ -110,6 +144,12 @@ class EditProfileFragment : Fragment() {
                         binding.etAddress.setText("No address added yet")
                         binding.etAddress.setTextColor(resources.getColor(android.R.color.darker_gray, null))
                     }
+
+                    // Inside onViewCreated
+                    binding.ivProfilePicture.setOnClickListener {
+                        pickFile.launch("image/*")
+                    }
+
                     // Load profile picture
                     if (foto.isNotEmpty()) {
                         Glide.with(requireContext())
@@ -128,17 +168,65 @@ class EditProfileFragment : Fragment() {
             }
     }
 
+    private val pickFile =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            if (uri != null) {
+                Log.d("Cloudinary", "URL: $uri")
+                pickedUri = uri
+                Glide.with(this)
+                    .load(uri)
+                    .circleCrop()
+                    .into(binding.ivProfilePicture)
+            }
+        }
+
+    suspend fun uploadFileToCloudinary(context: Context, uri: Uri): String? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val cloudinary = Cloudinary(
+                    mapOf(
+                        "cloud_name" to "dzpjccspp"
+                    )
+                )
+
+                val inputStream = context.contentResolver.openInputStream(uri)
+                val bytes = inputStream!!.readBytes()
+
+                val result = cloudinary.uploader().unsignedUpload(
+                    bytes,
+                    "UAS_Rebox",
+                    ObjectUtils.asMap(
+                        "resource_type", "auto",
+                        "folder", "projectUAS"
+                    )
+                )
+
+                Log.d("cloudinary result", result["secure_url"] as String)
+                result["secure_url"] as String?
+            } catch (e: Exception) {
+                e.printStackTrace()
+                null
+            }
+        }
+    }
+
     private fun editProfile(
         db: FirebaseFirestore,
-        newUserDetail: User
-    ) = db.collection("users")
-        .document(originalEmail)
-        .update(
-            "username", newUserDetail.username,
-            "namalengkap", newUserDetail.namalengkap,
-            "phonenumber", newUserDetail.phonenumber,
-            "alamat", newUserDetail.alamat
+        newUserDetail: User,
+        newImageUrl: String? = null
+    ): com.google.android.gms.tasks.Task<Void> {
+        val updateData = mutableMapOf<String, Any>(
+            "username" to newUserDetail.username,
+            "namalengkap" to newUserDetail.namalengkap,
+            "phonenumber" to newUserDetail.phonenumber,
+            "alamat" to newUserDetail.alamat
         )
+
+        // Only update 'foto' if a new image was uploaded
+        newImageUrl?.let { updateData["foto"] = it }
+
+        return db.collection("users").document(originalEmail).update(updateData)
+    }
 
     companion object {
         /**

@@ -44,7 +44,7 @@ class UploadProductFragment : Fragment() {
         binding!!.upJenis.adapter = dp
 
         binding!!.btnAddImage.setOnClickListener {
-            pickFile.launch("*/*")
+            pickFile.launch("image/*")
         }
 
         binding!!.btnUploadProduct.setOnClickListener {
