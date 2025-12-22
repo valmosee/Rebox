@@ -39,5 +39,12 @@ class UserActivity : AppCompatActivity() {
 
         val navController = navHostFragment.navController
         binding.bottomNavView.setupWithNavController(navController)
+
+        val userEmail = intent.getStringExtra("email") ?: ""
+
+        val bundle = Bundle().apply {
+            putString("email", userEmail)
+        }
+        navController.setGraph(R.navigation.usernav, bundle)
     }
 }

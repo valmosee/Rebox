@@ -76,15 +76,6 @@ class EditProfileFragment : Fragment() {
         loadUserProfile(originalEmail)
 
         binding.btnSave.setOnClickListener {
-            val updatedUser = User(
-                email = binding.etEmail.text.toString(),
-                username = binding.etUsername.text.toString(),
-                namalengkap = binding.etFullName.text.toString(),
-                password = "PASSWORD", // ga ngefek
-                phonenumber = binding.etPhoneNumber.text.toString(),
-                alamat = binding.etAddress.text.toString(),
-                foto = binding.ivProfilePicture.toString()
-            )
             viewLifecycleOwner.lifecycleScope.launch {
                 var imageUrl: String? = null
 

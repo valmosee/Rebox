@@ -8,5 +8,6 @@ data class Sepatu(
     var ukuran: String = "",
     var harga: String = "",
     var deskripsi: String = "",
-    var image: String = ""
+    var image: String = "",
+    var sellerId: String = "",
 )

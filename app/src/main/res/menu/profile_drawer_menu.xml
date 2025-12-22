@@ -12,6 +12,12 @@
             android:title="Change Password" />
 
         <item
+            android:id="@+id/nav_my_store"
+            android:icon="@drawable/store"
+            android:title="My Store" />
+
+
+        <item
             android:id="@+id/nav_logout"
             android:icon="@android:drawable/ic_menu_close_clear_cancel"
             android:title="Logout" />
