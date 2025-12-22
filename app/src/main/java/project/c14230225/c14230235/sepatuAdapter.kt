@@ -40,7 +40,10 @@ class sepatuAdapter (private var listProduct: MutableList<Sepatu>) :
             val bundle = Bundle().apply {
                 putString("productId", productId)
             }
-            context.findNavController().navigate(R.id.action_menuhome_to_detailProductFragment, bundle)
+            androidx.navigation.Navigation.findNavController(it).navigate(
+                R.id.action_menuhome_to_detailProductFragment,
+                bundle
+            )
         }
     }
 
@@ -56,5 +59,6 @@ class sepatuAdapter (private var listProduct: MutableList<Sepatu>) :
         val img = view.findViewById<ImageView>(R.id.imgProduct)
         val title = view.findViewById<TextView>(R.id.txtTitle)
         val price = view.findViewById<TextView>(R.id.txtPrice)
+        val card = view.findViewById<androidx.cardview.widget.CardView>(R.id.productcard)
     }
 }
