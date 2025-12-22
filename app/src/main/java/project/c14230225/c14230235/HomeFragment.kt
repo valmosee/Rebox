@@ -9,7 +9,9 @@
     import android.view.LayoutInflater
     import android.view.View
     import android.view.ViewGroup
+    import android.widget.Button
     import android.widget.TextView
+    import androidx.navigation.fragment.findNavController
     import androidx.recyclerview.widget.GridLayoutManager
     import androidx.recyclerview.widget.RecyclerView
     import com.google.android.material.button.MaterialButton
@@ -52,6 +54,12 @@
             btnClearFilters = view.findViewById(R.id.btnClearFilters)
             tvActiveFilters = view.findViewById(R.id.tvActiveFilters)
             chipGroupActiveFilters = view.findViewById(R.id.chipGroupActiveFilters)
+            var btnTambah: Button = view.findViewById<Button>(R.id.btnTambah)
+
+            btnTambah.setOnClickListener {
+                println("Masuk Add Product")
+                findNavController().navigate(R.id.action_menuhome_to_UploadSepatuFragment)
+            }
 
             db = FirebaseFirestore.getInstance()
 
@@ -67,6 +75,8 @@
             btnClearFilters.setOnClickListener { clearAllFilters() }
 
             loadProducts()
+
+
         }
 
 
