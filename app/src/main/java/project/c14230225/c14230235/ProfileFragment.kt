@@ -83,7 +83,7 @@ class ProfileFragment : Fragment() {
                 R.id.nav_change_password -> {
                     Toast.makeText(requireContext(), "Change Password clicked", Toast.LENGTH_SHORT).show()
                     // Navigate to change password screen
-                    // findNavController().navigate(R.id.action_profile_to_changePassword)
+                     findNavController().navigate(R.id.action_menuprofile_to_changePasswordFragment)
                 }
                 R.id.nav_logout -> {
                     Toast.makeText(requireContext(), "Logout clicked", Toast.LENGTH_SHORT).show()

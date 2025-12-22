@@ -62,6 +62,6 @@ dependencies {
     implementation("org.mindrot:jbcrypt:0.4")
     implementation("com.cloudinary:cloudinary-android:3.1.2")
     implementation("com.cloudinary:cloudinary-core:2.0.0")
-
+    implementation("com.google.android.material:material:1.9.0")
     implementation(libs.glide)
 }
