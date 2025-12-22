@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import project.c14230225.c14230235.databinding.FragmentLoginBinding
 import project.c14230225.c14230235.databinding.FragmentRegisterBinding
 

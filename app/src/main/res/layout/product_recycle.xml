@@ -4,6 +4,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
     android:elevation="4dp"
+    android:id="@+id/productcard"
     android:foreground="?attr/selectableItemBackground"
     app:cardUseCompatPadding="true">
 

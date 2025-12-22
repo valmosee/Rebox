@@ -19,9 +19,9 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import project.c14230225.c14230235.databinding.FragmentUploadProductBinding
-class UploadProductFragment : Fragment() {
-    var binding: FragmentUploadProductBinding? = null
+import project.c14230225.c14230235.databinding.FragmentUploadSepatuBinding
+class UploadSepatuFragment : Fragment() {
+    var binding: FragmentUploadSepatuBinding? = null
     lateinit var db: FirebaseFirestore
     lateinit var pickedUri: Uri
 
@@ -30,7 +30,7 @@ class UploadProductFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        binding = FragmentUploadProductBinding.inflate(inflater, container, false)
+        binding = FragmentUploadSepatuBinding.inflate(inflater, container, false)
 
         db = FirebaseFirestore.getInstance()
 
@@ -44,10 +44,10 @@ class UploadProductFragment : Fragment() {
         binding!!.upJenis.adapter = dp
 
         binding!!.btnAddImage.setOnClickListener {
-            pickFile.launch("image/*")
+            pickFile.launch("*/*")
         }
 
-        binding!!.btnUploadProduct.setOnClickListener {
+        binding!!.btnUploadSepatu.setOnClickListener {
             if (!::pickedUri.isInitialized) {
                 Toast.makeText(context, "Tambahkan gambar dulu!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
@@ -65,7 +65,9 @@ class UploadProductFragment : Fragment() {
                     val _upHarga = binding!!.upHarga.text.toString().trim()
                     val _upDeskripsi = binding!!.upDeskripsi.text.toString().trim()
 
-                    var newProduct = Sepatu(
+                    var newSepatu = Sepatu(
+                        "",
+                        MainActivity._UserSession.email,
                         _upNama,
                         _upJenis,
                         _upUkuran,
@@ -75,7 +77,7 @@ class UploadProductFragment : Fragment() {
                     )
 
                     db.collection("products")
-                        .add(newProduct)
+                        .add(newSepatu)
                         .addOnSuccessListener { documentReference ->
                             Toast.makeText(
                                 context, "Sukses : Product added with ID: ${documentReference.id}",

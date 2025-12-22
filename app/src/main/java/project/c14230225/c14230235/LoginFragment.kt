@@ -50,7 +50,8 @@ class LoginFragment : Fragment() {
                 return@setOnClickListener
             }
 
-            db.collection("users").document(email).get()
+            db.collection("users").document(email)
+                .get()
                 .addOnSuccessListener { document ->
                     if (!document.exists()) {
                         Toast.makeText(context, "Email belum terdaftar", Toast.LENGTH_SHORT).show()

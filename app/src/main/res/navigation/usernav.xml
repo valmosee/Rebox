@@ -10,13 +10,22 @@
         android:name="project.c14230225.c14230235.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_menuhome_to_UploadSepatuFragment"
+            app:destination="@id/UploadSepatuFragment" />
+        <action
+            android:id="@+id/action_menuhome_to_detailProductFragment"
+            app:destination="@id/detailProductFragment">
+            <argument
+                android:name="productId"
+                app:argType="string" /> <!-- bisa string, int, long, dll -->
+        </action>
     </fragment>
     <fragment
         android:id="@+id/menuhistorytransaksi"
         android:name="project.c14230225.c14230235.TransaksiFragment"
         android:label="fragment_transaksi"
         tools:layout="@layout/fragment_transaksi" />
-
     <fragment
         android:id="@+id/menuprofile"
         android:name="project.c14230225.c14230235.ProfileFragment"
@@ -28,6 +37,17 @@
     </fragment>
 
     <fragment
+        android:id="@+id/UploadSepatuFragment"
+        android:name="project.c14230225.c14230235.UploadSepatuFragment"
+        android:label="fragment_upload_sepatu"
+        tools:layout="@layout/fragment_upload_sepatu" />
+    <fragment
+        android:id="@+id/chattingFragment"
+        android:name="project.c14230225.c14230235.ChattingFragment"
+        android:label="fragment_chatting"
+        tools:layout="@layout/fragment_chatting" />
+
+    <fragment
         android:id="@+id/editProfileFragment"
         android:name="project.c14230225.c14230235.EditProfileFragment"
         android:label="EditProfile"
@@ -37,5 +57,18 @@
             android:name="userEmail"
             app:argType="string" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/detailProductFragment"
+        android:name="project.c14230225.c14230235.DetailProductFragment"
+        android:label="fragment_detail_product"
+        tools:layout="@layout/fragment_detail_product" >
+        <action
+            android:id="@+id/action_detailProductFragment_to_chattingFragment"
+            app:destination="@id/chattingFragment">
+            <argument
+                android:name="user2"
+                app:argType="string" />
+        </action>
     </fragment>
 </navigation>

@@ -1,11 +1,13 @@
 package project.c14230225.c14230235
 
 import android.annotation.SuppressLint
+import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 
@@ -31,6 +33,15 @@ class sepatuAdapter (private var listProduct: MutableList<Sepatu>) :
         Glide.with(holder.itemView.context)
             .load(item.image)
             .into(holder.img)
+        holder.card.setOnClickListener {
+            println(item.id)
+            println(item.nama)
+            val productId = item.id
+            val bundle = Bundle().apply {
+                putString("productId", productId)
+            }
+            context.findNavController().navigate(R.id.action_menuhome_to_detailProductFragment, bundle)
+        }
     }
 
     @SuppressLint("NotifyDataSetChanged")

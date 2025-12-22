@@ -5,12 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.Firebase
 import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.auth.User
 import com.google.firebase.firestore.firestore
 import project.c14230225.c14230235.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     companion object {
-        var _UserSession : String = ""
+        var _UserSession = User("", "", "", "", "", "", "")
         var JenisSepatu = mutableListOf<String>(
             "Flats Shoes",
             "Sneakers",

@@ -20,6 +20,9 @@ class UserActivity : AppCompatActivity() {
         binding = ActivityUserBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.topAppBar)
+        supportActionBar?.title = "User Activity"
+
         val root = findViewById<View>(R.id.framecontainer)
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
