@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -106,6 +107,11 @@ class EditProfileFragment : Fragment() {
                         Toast.makeText(requireContext(), "Update failed", Toast.LENGTH_SHORT).show()
                     }
             }
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            // Navigate back
+            findNavController().navigateUp()
         }
     }
 

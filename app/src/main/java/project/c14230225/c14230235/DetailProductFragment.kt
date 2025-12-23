@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.google.firebase.Timestamp
@@ -40,6 +41,9 @@ class DetailProductFragment : Fragment() {
         // Get Product ID from arguments
         productId = arguments?.getString("productId") ?: ""
 
+        Log.d("DetailProduct", "Product ID: $productId")
+        Log.d("DetailProduct", "Current user email: $currentUserEmail")
+
         if (productId.isNotEmpty()) {
             loadProductData(productId)
         } else {
@@ -60,18 +64,28 @@ class DetailProductFragment : Fragment() {
             }
         }
 
-        // ✅ Updated Buy Button - sesuaikan dengan ID di XML
         binding.btnBuy.setOnClickListener {
             showBuyConfirmationDialog()
+        }
+
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            // Navigate back
+            findNavController().navigateUp()
         }
     }
 
     private fun loadProductData(id: String) {
+        Log.d("DetailProduct", "Loading product with ID: $id")
+
+        // ✅ FIXED: Use .document(id) instead of .whereEqualTo()
         db.collection("products")
-            .document(id)
+            .document(id) // Direct document access using Firestore document ID
             .get()
             .addOnSuccessListener { document ->
+                Log.d("DetailProduct", "Document exists: ${document.exists()}")
+
                 if (document != null && document.exists()) {
+                    // Map Firestore document to Sepatu object
                     productDetail = Sepatu(
                         id = document.id,
                         username = document.getString("username") ?: "",
@@ -80,23 +94,35 @@ class DetailProductFragment : Fragment() {
                         ukuran = document.getString("ukuran") ?: "",
                         harga = document.getString("harga") ?: "0",
                         deskripsi = document.getString("deskripsi") ?: "",
-                        image = document.getString("image") ?: ""
+                        image = document.getString("image") ?: "",
+                        sellerEmail = document.getString("sellerEmail") ?: "",
+                        sellerId = document.getString("sellerId") ?: ""
                     )
+
+                    Log.d("DetailProduct", "Product loaded: ${productDetail?.nama}")
                     updateUI()
                     checkIfAlreadyPurchased()
                 } else {
+                    Log.e("DetailProduct", "Product document not found")
                     Toast.makeText(requireContext(), "Product not found", Toast.LENGTH_SHORT).show()
                     findNavController().popBackStack()
                 }
             }
             .addOnFailureListener { exception ->
-                Log.e("Firestore", "Error getting document: ", exception)
-                Toast.makeText(requireContext(), "Error loading product", Toast.LENGTH_SHORT).show()
+                Log.e("DetailProduct", "Error getting document: ", exception)
+                Toast.makeText(requireContext(), "Error loading product: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
 
     private fun checkIfAlreadyPurchased() {
-        // Cek apakah user sudah membeli produk ini
+        if (currentUserEmail.isEmpty()) {
+            Log.w("DetailProduct", "Current user email is empty")
+            return
+        }
+
+        Log.d("DetailProduct", "Checking if already purchased...")
+
+        // Check if user already bought this product
         db.collection("transactions")
             .whereEqualTo("buyerEmail", currentUserEmail)
             .whereEqualTo("productId", productId)
@@ -104,11 +130,17 @@ class DetailProductFragment : Fragment() {
             .get()
             .addOnSuccessListener { documents ->
                 if (!documents.isEmpty) {
-                    // Produk sudah dibeli
+                    Log.d("DetailProduct", "Product already purchased")
+                    // Product already bought
                     binding.btnBuy.isEnabled = false
                     binding.btnBuy.text = "Sudah Dibeli"
                     binding.btnBuy.alpha = 0.5f
+                } else {
+                    Log.d("DetailProduct", "Product not yet purchased")
                 }
+            }
+            .addOnFailureListener { e ->
+                Log.e("DetailProduct", "Error checking purchase status", e)
             }
     }
 
@@ -116,34 +148,42 @@ class DetailProductFragment : Fragment() {
         productDetail?.let { product ->
             AlertDialog.Builder(requireContext())
                 .setTitle("Konfirmasi Pembelian")
-                .setMessage("Apakah Anda yakin ingin membeli ${product.nama} seharga ${product.harga}?")
+                .setMessage("Apakah Anda yakin ingin membeli ${product.nama} seharga Rp ${product.harga}?")
                 .setPositiveButton("Beli") { _, _ ->
                     processPurchase(product)
                 }
                 .setNegativeButton("Batal", null)
                 .show()
+        } ?: run {
+            Toast.makeText(requireContext(), "Product data not loaded", Toast.LENGTH_SHORT).show()
         }
     }
 
     private fun processPurchase(product: Sepatu) {
+        if (currentUserEmail.isEmpty()) {
+            Toast.makeText(requireContext(), "User email not found", Toast.LENGTH_SHORT).show()
+            return
+        }
+
         // Show loading
         binding.btnBuy.isEnabled = false
         binding.btnBuy.text = "Memproses..."
 
         // 1. Create transaction record
         val transactionId = db.collection("transactions").document().id
-        val transaction = Transaction(
-            id = transactionId,
-            buyerEmail = currentUserEmail,
-            buyerUsername = MainActivity._UserSession.username,
-            productId = product.id,
-            productName = product.nama,
-            productImage = product.image,
-            productPrice = product.harga,
-            productSize = product.ukuran,
-            sellerUsername = product.username,
-            purchaseDate = Timestamp.now(),
-            status = "completed"
+        val transaction = hashMapOf(
+            "id" to transactionId,
+            "buyerEmail" to currentUserEmail,
+            "buyerUsername" to MainActivity._UserSession.username,
+            "productId" to product.id,
+            "productName" to product.nama,
+            "productImage" to product.image,
+            "productPrice" to product.harga,
+            "productSize" to product.ukuran,
+            "sellerUsername" to product.username,
+            "sellerEmail" to product.sellerEmail,
+            "purchaseDate" to Timestamp.now(),
+            "status" to "completed"
         )
 
         // 2. Save transaction to Firestore
@@ -151,15 +191,17 @@ class DetailProductFragment : Fragment() {
             .document(transactionId)
             .set(transaction)
             .addOnSuccessListener {
+                Log.d("Purchase", "Transaction saved successfully")
                 // 3. Add product to user's purchased list
                 db.collection("users")
                     .document(currentUserEmail)
                     .update("purchasedProducts", FieldValue.arrayUnion(product.id))
                     .addOnSuccessListener {
-                        // 4. Mark product as sold
+                        Log.d("Purchase", "Added to purchased products")
                         markProductAsSold(product.id)
                     }
                     .addOnFailureListener { e ->
+                        Log.w("Purchase", "Field doesn't exist, creating it", e)
                         // If field doesn't exist, create it
                         db.collection("users")
                             .document(currentUserEmail)
@@ -168,11 +210,12 @@ class DetailProductFragment : Fragment() {
                                 markProductAsSold(product.id)
                             }
                             .addOnFailureListener {
-                                showPurchaseError(e.message)
+                                showPurchaseError(it.message)
                             }
                     }
             }
             .addOnFailureListener { e ->
+                Log.e("Purchase", "Failed to save transaction", e)
                 showPurchaseError(e.message)
             }
     }
@@ -182,6 +225,7 @@ class DetailProductFragment : Fragment() {
             .document(productId)
             .update("status", "sold")
             .addOnSuccessListener {
+                Log.d("Purchase", "Product marked as sold")
                 showPurchaseSuccess()
             }
             .addOnFailureListener { e ->
@@ -217,7 +261,7 @@ class DetailProductFragment : Fragment() {
     private fun updateUI() {
         productDetail?.let { product ->
             binding.tvProductName.text = product.nama
-            binding.tvPrice.text = product.harga
+            binding.tvPrice.text = "Rp ${product.harga}"
             binding.tvDeskripsi.text = product.deskripsi
 
             // Load Image
@@ -225,6 +269,7 @@ class DetailProductFragment : Fragment() {
                 Glide.with(this)
                     .load(product.image)
                     .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_background)
                     .into(binding.imageProduct)
             }
         }

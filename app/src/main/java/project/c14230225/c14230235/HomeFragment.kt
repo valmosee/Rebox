@@ -102,10 +102,11 @@
                     println("🔥 Fetched ${result.size()} products from Firestore")
                     for (doc in result) {
                         val product = doc.toObject(Sepatu::class.java)
-                        println("📦 Product: ${product.nama}, ${product.harga}") // Add this
+                        product.id = doc.id // ✅ ADD THIS LINE - Store Firestore document ID
+                        println("📦 Product: ${product.nama}, ${product.harga}, ID: ${product.id}") // Updated log
                         sepatuList.add(product)
                     }
-                    println("✅ Total in sepatuList: ${sepatuList.size}") // Add this
+                    println("✅ Total in sepatuList: ${sepatuList.size}")
                     applyFilters()
                 }
                 .addOnFailureListener { e ->

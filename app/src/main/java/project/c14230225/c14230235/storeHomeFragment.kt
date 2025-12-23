@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +23,9 @@ class storeHomeFragment : Fragment() {
     private val productList = mutableListOf<Sepatu>()
     private val db = FirebaseFirestore.getInstance()
 
+    // Add this variable
+    private var currentUserEmail: String = ""
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,17 +37,35 @@ class storeHomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val args = storeHomeFragmentArgs.fromBundle(requireArguments())
+        currentUserEmail = args.userEmail
+
+        if (currentUserEmail.isEmpty()) {
+            Toast.makeText(requireContext(), "Email tidak ditemukan", Toast.LENGTH_SHORT).show()
+            findNavController().popBackStack() // Close StoreActivity and go back
+            return
+        }
+
+        Log.d("StoreFragment", "Current user email: $currentUserEmail")
+
+        setupToolbar()
         setupRecyclerView()
         setupFAB()
         loadProducts()
 
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
+            // Navigate back
+            findNavController().navigateUp()
+        }
+    }
+
+    private fun setupToolbar() {
         binding.toolbar.setNavigationOnClickListener {
-            findNavController().popBackStack()
+            findNavController().popBackStack() // Close StoreActivity and go back
         }
     }
 
     private fun setupRecyclerView() {
-        // Assuming you have created storeSepatuAdapter similarly to your previous adapter
         productAdapter = storeSepatuAdapter(
             productList,
             onEditClick = { product -> editProduct(product) },
@@ -60,46 +82,51 @@ class storeHomeFragment : Fragment() {
         binding.fabAddProduct.setOnClickListener {
             // Navigate to UploadSepatuFragment
             val action = storeHomeFragmentDirections
-                .actionStoreHomeFragmentToUploadSepatuFragment(requireActivity().intent.getStringExtra("email") ?: "")
+                .actionStoreHomeFragmentToUploadSepatuFragment(currentUserEmail)
             findNavController().navigate(action)
         }
     }
 
     private fun loadProducts() {
-        // Ambil email dari session saat ini
-        val currentUserEmail = arguments?.getString("email") ?: ""
+        Log.d("StoreFragment", "Loading products for email: $currentUserEmail")
 
-        // Load products from Firestore
         db.collection("products")
-            .whereEqualTo("username", currentUserEmail) // Filter berdasarkan email penjual
-            .addSnapshotListener { result, e ->
-                if (e != null) {
-                    Log.w("Firestore", "Listen failed.", e)
-                    Toast.makeText(requireContext(), "Gagal memuat data", Toast.LENGTH_SHORT).show()
+            .whereEqualTo("sellerEmail", currentUserEmail) // Use sellerEmail for querying
+            .addSnapshotListener { result, error ->
+                if (error != null) {
+                    Log.e("StoreFragment", "Error loading products", error)
+                    Toast.makeText(
+                        requireContext(),
+                        "Error loading products: ${error.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
                     return@addSnapshotListener
                 }
 
                 productList.clear()
-                if (result != null) {
+
+                if (result != null && !result.isEmpty) {
+                    Log.d("StoreFragment", "Found ${result.size()} products")
                     for (document in result) {
-                        // Konversi dokumen ke object Sepatu
                         val product = document.toObject(Sepatu::class.java)
-
-                        // PENTING: Map ID dokumen ke property id agar bisa di-edit/delete nanti
-                        product.id = document.id
-
+                        product.id = document.id // IMPORTANT: Store the Firestore document ID
                         productList.add(product)
+                        Log.d("StoreFragment", "Added product: ${product.nama}")
                     }
+                } else {
+                    Log.d("StoreFragment", "No products found")
                 }
+
                 updateUI()
             }
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateUI() {
+        Log.d("StoreFragment", "Updating UI with ${productList.size} products")
+
         if (productList.isEmpty()) {
             binding.recyclerViewProducts.visibility = View.GONE
-            // You might want to show a "No products" TextView here
         } else {
             binding.recyclerViewProducts.visibility = View.VISIBLE
             productAdapter.notifyDataSetChanged()
@@ -107,20 +134,18 @@ class storeHomeFragment : Fragment() {
     }
 
     private fun editProduct(product: Sepatu) {
-        // Pass the productId to the upload fragment to repurpose it as an "Edit" screen
-        val bundle = Bundle().apply {
-            putString("productId", product.id)
-        }
-//        findNavController().navigate(R.id.action_storeHomeFragment_to_uploadSepatuFragment, bundle)
+        Toast.makeText(requireContext(), "Edit: ${product.nama}", Toast.LENGTH_SHORT).show()
+        // TODO: Navigate to edit screen
+        // val action = storeHomeFragmentDirections
+        //     .actionStoreHomeFragmentToUploadSepatuFragment(currentUserEmail, product.id)
+        // findNavController().navigate(action)
     }
 
     private fun deleteProduct(product: Sepatu) {
-        // Build the confirmation dialog
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
             .setTitle("Hapus Produk?")
             .setMessage("Apakah Anda yakin ingin menghapus ${product.nama}? Tindakan ini tidak dapat dibatalkan.")
             .setNeutralButton("Batal") { dialog, _ ->
-                // Just close the dialog
                 dialog.dismiss()
             }
             .setPositiveButton("Hapus") { _, _ ->
@@ -129,12 +154,20 @@ class storeHomeFragment : Fragment() {
                     .document(product.id) // Using the ID we mapped in loadProducts
                     .delete()
                     .addOnSuccessListener {
-                        Toast.makeText(requireContext(), "Produk berhasil dihapus", Toast.LENGTH_SHORT).show()
-                        // If you use addSnapshotListener in loadProducts(),
-                        // the list will update automatically.
+                        Toast.makeText(
+                            requireContext(),
+                            "Produk berhasil dihapus",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        // addSnapshotListener will automatically update the list
                     }
                     .addOnFailureListener { e ->
-                        Toast.makeText(requireContext(), "Gagal menghapus: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Log.e("StoreFragment", "Error deleting product", e)
+                        Toast.makeText(
+                            requireContext(),
+                            "Gagal menghapus: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
             }
             .show()
