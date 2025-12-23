@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class HistoryTransactionFragment : Fragment() {
+class HistoryTransaksiFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var rvHistory: RecyclerView

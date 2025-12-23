@@ -45,22 +45,20 @@ class ChattingFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
 
         binding?.btnSend?.setOnClickListener {
-            var txt = binding?.etMessage?.text.toString()
-            if(txt != "") {
+            val txt = binding?.etMessage?.text.toString().trim()
+            if (txt.isNotEmpty()) {
                 val newChat = Chat(
-                    "",
-                    channelname,
-                    user1,
-                    user2,
-                    Timestamp.now(),
-                    txt
+                    id = "",
+                    channelname = channelname,
+                    user1 = user1, // The logged-in person (Sender)
+                    user2 = user2, // The other person (Receiver)
+                    tanggal = Timestamp.now(),
+                    teks = txt
                 )
 
-                db.collection("chatting")
-                    .add(newChat)
-                    .addOnSuccessListener { document ->
-                        Toast.makeText(context, "Message Sent", Toast.LENGTH_SHORT).show()
-                        loadChat()
+                db.collection("chatting").add(newChat)
+                    .addOnSuccessListener {
+                        binding?.etMessage?.text?.clear() // Clear input after sending
                     }
             }
         }
@@ -84,31 +82,22 @@ class ChattingFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadChat() {
-        print("debug channel name = " + channelname)
+        // Change .get() to .addSnapshotListener for real-time talk-back
         db.collection("chatting")
             .whereEqualTo("channelname", channelname)
-//            .orderBy("tanggal", Query.Direction.ASCENDING)
-            .get()
-            .addOnSuccessListener { result ->
-                chatList.clear()
+            .orderBy("tanggal", Query.Direction.ASCENDING) // Order by time
+            .addSnapshotListener { result, e ->
+                if (e != null) return@addSnapshotListener
 
-                println("🔥 Fetched ${result.size()} products from Firestore")
-                for (doc in result) {
-                    val chat = Chat(
-                        doc.id,
-                        doc.get("channelname").toString(),
-                        doc.get("user1").toString(),
-                        doc.get("user2").toString(),
-                        doc.getTimestamp("tanggal"),
-                        doc.get("teks").toString()
-                    )
+                chatList.clear()
+                for (doc in result!!) {
+                    val chat = doc.toObject(Chat::class.java).apply { id = doc.id }
                     chatList.add(chat)
                 }
                 adapter.updateList(chatList)
-                print("debug = " + chatList.size.toString())
-            }
-            .addOnFailureListener { e ->
-                println("❌ Error fetching products: $e")
+
+                // Auto-scroll to bottom so User 2 sees the latest reply
+                binding?.rvChats?.scrollToPosition(chatList.size - 1)
             }
     }
 

@@ -29,14 +29,20 @@ class chatAdapter(private var listChat: MutableList<Chat>, var context: Chatting
     }
 
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        println("🎨 Binding position $position")
         val item = listChat[position]
-        if(item.user1 == MainActivity._UserSession.email) {
+
+        if (item.user1 == MainActivity._UserSession.email) {
+            // I am the sender (user1) - Show RIGHT, Hide LEFT
+            holder.kanan.visibility = View.VISIBLE
             holder.kiri.visibility = View.GONE
+
             holder.tv3.text = item.user1
             holder.tv4.text = item.teks
         } else {
+            // The other person is the sender - Show LEFT, Hide RIGHT
+            holder.kiri.visibility = View.VISIBLE
             holder.kanan.visibility = View.GONE
+
             holder.tv1.text = item.user1
             holder.tv2.text = item.teks
         }
