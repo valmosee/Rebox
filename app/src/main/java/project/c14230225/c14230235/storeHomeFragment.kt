@@ -53,6 +53,12 @@ class storeHomeFragment : Fragment() {
         setupFAB()
         loadProducts()
 
+        binding.btnChat.setOnClickListener {
+            val action = storeHomeFragmentDirections
+                .actionStoreHomeFragmentToDeletedFragment()
+            findNavController().navigate(action)
+        }
+
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner) {
             // Navigate back
             findNavController().navigateUp()
@@ -151,6 +157,9 @@ class storeHomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
+    private lateinit var title: String
+    private lateinit var img: String
+
     private fun deleteProduct(product: Sepatu) {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
             .setTitle("Hapus Produk?")
@@ -160,6 +169,26 @@ class storeHomeFragment : Fragment() {
             }
             .setPositiveButton("Hapus") { _, _ ->
                 // Perform the actual deletion in Firestore
+                db.collection("products")
+                    .document(product.id)
+                    .get()
+                    .addOnSuccessListener { document ->
+
+                        db.collection("deleted")
+                            .document(document.getString("nama") ?: "")
+                            .set(product)
+                            .addOnSuccessListener {
+                                Log.d("DeleteFragment", "Success")
+                            }
+                            .addOnFailureListener {
+                                Log.d("DeleteFragment", "error")
+                            }
+
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("DeleteFragment", "error")
+                    }
+
                 db.collection("products")
                     .document(product.id) // Using the ID we mapped in loadProducts
                     .delete()
