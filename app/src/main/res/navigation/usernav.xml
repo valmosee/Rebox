@@ -99,6 +99,9 @@
         <argument
             android:name="userEmail"
             app:argType="string" />
+        <action
+            android:id="@+id/action_storeHomeFragment_to_editStoreProductFragment"
+            app:destination="@id/editStoreProductFragment" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
@@ -115,4 +118,16 @@
         android:name="project.c14230225.c14230235.HistoryTransactionFragment"
         android:label="fragment_history_transaksi"
         tools:layout="@layout/fragment_history_transaksi" />
+    
+    <fragment
+        android:id="@+id/editStoreProductFragment"
+        android:name="project.c14230225.c14230235.editStoreProductFragment"
+        android:label="Edit Product">
+        <argument
+            android:name="productId"
+            app:argType="string" />
+        <argument
+            android:name="userEmail"
+            app:argType="string" />
+    </fragment>
 </navigation>

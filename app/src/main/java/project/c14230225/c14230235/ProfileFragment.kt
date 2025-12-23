@@ -85,10 +85,10 @@ class ProfileFragment : Fragment() {
                     // Navigate to change password screen
                      findNavController().navigate(R.id.action_menuprofile_to_changePasswordFragment)
                 }
-                R.id.nav_logout -> {
-                    Toast.makeText(requireContext(), "Logout clicked", Toast.LENGTH_SHORT).show()
-                    // Navigate to login screen
-                }
+//                R.id.nav_logout -> {
+//                    Toast.makeText(requireContext(), "Logout clicked", Toast.LENGTH_SHORT).show()
+//                    // Navigate to login screen
+//                }
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

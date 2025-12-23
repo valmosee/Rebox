@@ -54,12 +54,6 @@
             btnClearFilters = view.findViewById(R.id.btnClearFilters)
             tvActiveFilters = view.findViewById(R.id.tvActiveFilters)
             chipGroupActiveFilters = view.findViewById(R.id.chipGroupActiveFilters)
-            var btnTambah: Button = view.findViewById<Button>(R.id.btnTambah)
-
-            btnTambah.setOnClickListener {
-                println("Masuk Add Product")
-                findNavController().navigate(R.id.action_menuhome_to_UploadSepatuFragment)
-            }
 
             db = FirebaseFirestore.getInstance()
 

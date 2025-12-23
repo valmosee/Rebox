@@ -22,12 +22,12 @@
             tools:src="@drawable/product_icon" />
 
         <Button
-            android:id="@+id/btnAddImage"
+            android:id="@+id/btnEditImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:backgroundTint="@color/material_dynamic_neutral70"
-            android:text="Add Image"
+            android:text="Edit Image"
             app:layout_constraintEnd_toEndOf="@+id/upImage"
             app:layout_constraintStart_toStartOf="@+id/upImage"
             app:layout_constraintTop_toBottomOf="@+id/upImage" />
@@ -44,7 +44,7 @@
             android:inputType="text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnAddImage" />
+            app:layout_constraintTop_toBottomOf="@+id/btnEditImage" />
 
         <Spinner
             android:id="@+id/upJenis"
@@ -102,17 +102,17 @@
             android:inputType="textMultiLine"
             android:gravity="top|start"
             android:minLines="4"
-            app:layout_constraintBottom_toTopOf="@+id/btnUploadSepatu"
+            app:layout_constraintBottom_toTopOf="@+id/btnSaveUpdatedSepatu"
             app:layout_constraintEnd_toEndOf="@+id/upHarga"
             app:layout_constraintStart_toStartOf="@+id/textView5"
             app:layout_constraintTop_toBottomOf="@+id/upHarga" />
 
         <Button
-            android:id="@+id/btnUploadSepatu"
+            android:id="@+id/btnSaveUpdatedSepatu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            android:text="Add Product"
+            android:text="Save Updated Product"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

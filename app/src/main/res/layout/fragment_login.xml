@@ -120,17 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="55dp"
             android:layout_marginTop="10dp"
-            android:orientation="horizontal">
-
-            <CheckBox
-                android:id="@+id/cekIngatSaya"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="Ingat saya"
-                android:textColor="#AAA9AB"
-                android:textSize="16sp" />
-        </LinearLayout>
+            android:orientation="horizontal"/>
 
         <Button
             android:id="@+id/btnLogin"

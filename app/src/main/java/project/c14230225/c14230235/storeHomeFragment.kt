@@ -123,8 +123,15 @@ class storeHomeFragment : Fragment() {
 
     @SuppressLint("NotifyDataSetChanged")
     private fun updateUI() {
+        // 1. Safety check: ensure fragment is attached and binding exists
+        if (!isAdded || _binding == null) {
+            Log.d("StoreFragment", "updateUI skipped: Fragment not attached or binding is null")
+            return
+        }
+
         Log.d("StoreFragment", "Updating UI with ${productList.size} products")
 
+        // 2. Access binding safely
         if (productList.isEmpty()) {
             binding.recyclerViewProducts.visibility = View.GONE
         } else {
@@ -135,10 +142,13 @@ class storeHomeFragment : Fragment() {
 
     private fun editProduct(product: Sepatu) {
         Toast.makeText(requireContext(), "Edit: ${product.nama}", Toast.LENGTH_SHORT).show()
-        // TODO: Navigate to edit screen
-        // val action = storeHomeFragmentDirections
-        //     .actionStoreHomeFragmentToUploadSepatuFragment(currentUserEmail, product.id)
-        // findNavController().navigate(action)
+
+        val action = storeHomeFragmentDirections
+            .actionStoreHomeFragmentToEditStoreProductFragment(
+                productId = product.id,
+                userEmail = currentUserEmail
+            )
+        findNavController().navigate(action)
     }
 
     private fun deleteProduct(product: Sepatu) {
