@@ -6,6 +6,17 @@
     android:layout_height="match_parent"
     tools:context=".storeHomeFragment">
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnDelHistory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginBottom="8dp"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@+id/fabAddProduct"
+        app:layout_constraintEnd_toEndOf="@+id/fabAddProduct"
+        app:srcCompat="@drawable/outline_history_24" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
@@ -33,10 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="16dp"
         app:fabSize="normal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fabAddProduct"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/icon_chat" />
 
@@ -53,7 +63,6 @@
         android:contentDescription="Add Product"
         android:src="@android:drawable/ic_input_add"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:tint="@android:color/white" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

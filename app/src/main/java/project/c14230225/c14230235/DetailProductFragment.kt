@@ -53,10 +53,10 @@ class DetailProductFragment : Fragment() {
 
         // Setup Buttons
         binding.btnChat.setOnClickListener {
-            val sellerUsername = productDetail?.username
-            if (!sellerUsername.isNullOrEmpty()) {
+            val sellerEmail = productDetail?.sellerEmail
+            if (!sellerEmail.isNullOrEmpty()) {
                 val bundle = Bundle().apply {
-                    putString("user2", sellerUsername)
+                    putString("user2", sellerEmail)
                 }
                 findNavController().navigate(R.id.action_detailProductFragment_to_chattingFragment, bundle)
             } else {

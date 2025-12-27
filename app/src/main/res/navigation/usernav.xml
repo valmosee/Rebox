@@ -105,6 +105,17 @@
         <action
             android:id="@+id/action_storeHomeFragment_to_deletedFragment"
             app:destination="@id/deletedFragment" />
+        <action
+            android:id="@+id/action_storeHomeFragment_to_chatListFragment"
+            app:destination="@id/chatListFragment" />
+        <fragment
+            android:id="@+id/chatListFragment"
+            android:name="project.c14230225.c14230235.ChatListFragment"
+            android:label="Daftar Chat" />
+
+        <action
+            android:id="@+id/action_chatListFragment_to_chattingFragment"
+            app:destination="@id/chattingFragment" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
@@ -133,4 +144,8 @@
         android:name="project.c14230225.c14230235.DeletedFragment"
         android:label="fragment_deleted"
         tools:layout="@layout/fragment_deleted" />
+    <fragment
+        android:id="@+id/chatListFragment"
+        android:name="project.c14230225.c14230235.ChatListFragment"
+        android:label="ChatListFragment" />
 </navigation>
