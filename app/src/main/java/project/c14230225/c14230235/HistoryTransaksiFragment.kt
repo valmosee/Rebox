@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,7 +18,7 @@ class HistoryTransaksiFragment : Fragment() {
 
     private lateinit var db: FirebaseFirestore
     private lateinit var rvHistory: RecyclerView
-    private lateinit var tvEmptyState: TextView
+    private lateinit var tvEmptyState: LinearLayout
     private lateinit var adapter: TransactionAdapter
     private val transactionList = mutableListOf<Transaction>()
     private var currentUserEmail: String = ""

@@ -174,8 +174,10 @@ class storeHomeFragment : Fragment() {
                     .get()
                     .addOnSuccessListener { document ->
 
+                        title = document.getString("nama") ?: ""
+
                         db.collection("deleted")
-                            .document(document.getString("nama") ?: "")
+                            .document(title)
                             .set(product)
                             .addOnSuccessListener {
                                 Log.d("DeleteFragment", "Success")
