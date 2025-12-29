@@ -53,7 +53,7 @@ class storeHomeFragment : Fragment() {
         setupFAB()
         loadProducts()
 
-        binding.btnChat.setOnClickListener {
+        binding.btnDelHistory.setOnClickListener {
             val action = storeHomeFragmentDirections
                 .actionStoreHomeFragmentToDeletedFragment()
             findNavController().navigate(action)
@@ -157,9 +157,6 @@ class storeHomeFragment : Fragment() {
         findNavController().navigate(action)
     }
 
-    private lateinit var title: String
-    private lateinit var img: String
-
     private fun deleteProduct(product: Sepatu) {
         com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
             .setTitle("Hapus Produk?")
@@ -168,45 +165,34 @@ class storeHomeFragment : Fragment() {
                 dialog.dismiss()
             }
             .setPositiveButton("Hapus") { _, _ ->
-                // Perform the actual deletion in Firestore
-                db.collection("products")
-                    .document(product.id)
-                    .get()
-                    .addOnSuccessListener { document ->
-
-                        title = document.getString("nama") ?: ""
-
-                        db.collection("deleted")
-                            .document(title)
-                            .set(product)
-                            .addOnSuccessListener {
-                                Log.d("DeleteFragment", "Success")
-                            }
-                            .addOnFailureListener {
-                                Log.d("DeleteFragment", "error")
-                            }
-
-                    }
-                    .addOnFailureListener { e ->
-                        Log.d("DeleteFragment", "error")
-                    }
-
-                db.collection("products")
-                    .document(product.id) // Using the ID we mapped in loadProducts
-                    .delete()
+                // First archive, then delete
+                db.collection("deleted")
+                    .document(product.id)  // Use ID instead of title for consistency
+                    .set(product)  // Add deletion timestamp
                     .addOnSuccessListener {
-                        Toast.makeText(
-                            requireContext(),
-                            "Produk berhasil dihapus",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        // addSnapshotListener will automatically update the list
+                        // Only delete from products after successful archive
+                        db.collection("products")
+                            .document(product.id)
+                            .delete()
+                            .addOnSuccessListener {
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Produk berhasil dihapus",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            .addOnFailureListener { e ->
+                                Toast.makeText(
+                                    requireContext(),
+                                    "Gagal menghapus dari produk: ${e.message}",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
                     }
                     .addOnFailureListener { e ->
-                        Log.e("StoreFragment", "Error deleting product", e)
                         Toast.makeText(
                             requireContext(),
-                            "Gagal menghapus: ${e.message}",
+                            "Gagal mengarsipkan: ${e.message}",
                             Toast.LENGTH_SHORT
                         ).show()
                     }
