@@ -60,9 +60,47 @@ class ChattingFragment : Fragment() {
                     .addOnSuccessListener {
                         binding?.etMessage?.text?.clear() // Clear input after sending
                     }
+
+                // update / insert ke chatList
+                // cek apakah sudah ada chatlist yang melibatkan user1 dan user2
+                var flag = false
+                db.collection("chatlist")
+                    .whereEqualTo("user1", user1)
+                    .whereEqualTo("user2", user2)
+                    .get()
+                    .addOnSuccessListener { result ->
+                        if(result.size() > 0) {
+                            // update chatlist
+//                            val newChatList = ChatList(
+//                                user1 = user1, // The logged-in person (Sender)
+//                                user2 = user2, // The other person (Receiver)
+//                                lastMessage = txt,
+//                                lastMessageTime = Timestamp.now(),
+//                                unreadCount = 0
+//                            )
+//
+//                            db.collection("chatlist").add(newChat)
+//                                .addOnSuccessListener {
+//                                    binding?.etMessage?.text?.clear() // Clear input after sending
+//                                }
+                        } else {
+                            // insert chatlist
+                            val newChatList = ChatList(
+                                user1 = user1, // The logged-in person (Sender)
+                                user2 = user2, // The other person (Receiver)
+                                lastMessage = txt,
+                                lastMessageTime = Timestamp.now(),
+                                unreadCount = 0
+                            )
+
+                            db.collection("chatlist").add(newChat)
+                                .addOnSuccessListener {
+                                    binding?.etMessage?.text?.clear()
+                                }
+                        }
+                    }
             }
         }
-
         return binding!!.root
     }
 

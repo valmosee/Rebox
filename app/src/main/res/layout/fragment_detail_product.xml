@@ -110,21 +110,6 @@
                         android:text="38"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
 
-                    <Button
-                        android:id="@+id/btnSize39"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="39"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
-
-                    <Button
-                        android:id="@+id/btnSize40"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="40"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton" />
                 </LinearLayout>
 
                 <!-- Divider -->

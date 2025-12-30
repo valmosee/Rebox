@@ -12,12 +12,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import project.c14230225.c14230235.databinding.FragmentChatListBinding
+import project.c14230225.c14230235.databinding.FragmentStoreBinding
 
 class ChatListFragment : Fragment() {
 
+    private var _binding: FragmentChatListBinding? = null
+
+    private val binding get() = _binding!!
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
-    private var emptyStateLayout: LinearLayout? = null  // ✅ Ubah jadi nullable
+    private var emptyStateLayout: LinearLayout? = null
     private val chatListItems = mutableListOf<ChatList>()
     private val db = FirebaseFirestore.getInstance()
     private var currentUserEmail: String = ""
@@ -27,44 +32,26 @@ class ChatListFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_chat_list, container, false)
+        _binding = FragmentChatListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        currentUserEmail = MainActivity._UserSession.email
+//        currentUserEmail = MainActivity._UserSession.email
 
         recyclerView = view.findViewById(R.id.rvChatList)
-        emptyStateLayout = view.findViewById(R.id.tvEmptyState)
-
-        if (emptyStateLayout == null) {
-            Log.w("ChatListFragment", "⚠️ Empty state layout not found in XML")
-        }
-
-        adapter = ChatListAdapter(chatListItems) { chatItem ->
-            // Navigate to chat fragment
-            val bundle = Bundle().apply {
-                putString("user2", chatItem.otherUserEmail)
-            }
-            findNavController().navigate(R.id.action_chatListFragment_to_chattingFragment, bundle)
-        }
-
-        recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = adapter
-
         loadChatList()
     }
 
     private fun loadChatList() {
         Log.d("ChatListFragment", "Loading chats for: $currentUserEmail")
 
-        db.collection("chatting")
-            .orderBy("tanggal", Query.Direction.DESCENDING)
+        db.collection("chatlist")
             .addSnapshotListener { result, error ->
                 if (error != null) {
                     Log.e("ChatListFragment", "Error loading chats", error)
-                    showEmptyState(true)
                     return@addSnapshotListener
                 }
 
@@ -74,40 +61,22 @@ class ChatListFragment : Fragment() {
                     try {
                         val chat = doc.toObject(Chat::class.java)
 
-                        // Skip if user2 is null or empty
-                        if (chat.user2.isNullOrEmpty() || chat.user1.isNullOrEmpty()) {
-                            Log.d("ChatListFragment", "⚠️ Skipping chat with null/empty users")
-                            return@forEach
+                        if (chat.user1 == MainActivity._UserSession.email){
+                            channelMap[chat.channelname] = ChatList(
+                                user1 = chat.user1,
+                                user2 = chat.user2,
+                                lastMessage = chat.teks,
+                                lastMessageTime = chat.tanggal
+                            )
+                        } else if (chat.user2 == MainActivity._UserSession.email){
+                            channelMap[chat.channelname] = ChatList(
+                                user1 = chat.user2,
+                                user2 = chat.user1,
+                                lastMessage = chat.teks,
+                                lastMessageTime = chat.tanggal
+                            )
                         }
 
-                        Log.d("ChatListFragment", "Processing chat: user1=${chat.user1}, user2=${chat.user2}, channel=${chat.channelname}")
-
-                        // Check if current user is involved in this chat
-                        val isUser1 = chat.user1 == currentUserEmail
-                        val isUser2 = chat.user2 == currentUserEmail
-
-                        if (isUser1 || isUser2) {
-                            // Determine who is the other user
-                            val otherUser = if (isUser1) {
-                                chat.user2
-                            } else {
-                                chat.user1
-                            }
-
-                            Log.d("ChatListFragment", "✅ Match found! Other user: $otherUser")
-
-                            // Only keep the latest message per channel
-                            if (!channelMap.containsKey(chat.channelname)) {
-                                channelMap[chat.channelname] = ChatList(
-                                    channelname = chat.channelname,
-                                    otherUserEmail = otherUser ?: "",
-                                    lastMessage = chat.teks,
-                                    lastMessageTime = chat.tanggal
-                                )
-                            }
-                        } else {
-                            Log.d("ChatListFragment", "❌ Not a match for current user")
-                        }
                     } catch (e: Exception) {
                         Log.e("ChatListFragment", "Error processing document: ${doc.id}", e)
                     }
@@ -118,17 +87,21 @@ class ChatListFragment : Fragment() {
                 chatListItems.clear()
                 chatListItems.addAll(
                     channelMap.values
-                        .filter { it.otherUserEmail.isNotEmpty() }
                         .sortedByDescending { it.lastMessageTime }
                 )
-                adapter.updateList(chatListItems)
+                Log.d("ChatListFragment", chatListItems.toString())
+                Log.d("ChatListFragment", "chatlistitems = " + chatListItems.size.toString())
 
-                showEmptyState(chatListItems.isEmpty())
+                adapter = ChatListAdapter(chatListItems) { chatItem ->
+                    // Navigate to chat fragment
+                    val bundle = Bundle().apply {
+                        putString("user2", chatItem.user2)
+                    }
+                    findNavController().navigate(R.id.action_chatListFragment_to_chattingFragment, bundle)
+                }
+
+                recyclerView.layoutManager = LinearLayoutManager(requireContext())
+                recyclerView.adapter = adapter
             }
-    }
-
-    private fun showEmptyState(show: Boolean) {
-        emptyStateLayout?.visibility = if (show) View.VISIBLE else View.GONE
-        recyclerView.visibility = if (show) View.GONE else View.VISIBLE
     }
 }

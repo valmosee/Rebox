@@ -113,9 +113,6 @@
             android:name="project.c14230225.c14230235.ChatListFragment"
             android:label="Daftar Chat" />
 
-        <action
-            android:id="@+id/action_chatListFragment_to_chattingFragment"
-            app:destination="@id/chattingFragment" />
     </fragment>
     <fragment
         android:id="@+id/changePasswordFragment"
@@ -147,5 +144,9 @@
     <fragment
         android:id="@+id/chatListFragment"
         android:name="project.c14230225.c14230235.ChatListFragment"
-        android:label="ChatListFragment" />
+        android:label="ChatListFragment" >
+        <action
+            android:id="@+id/action_chatListFragment_to_chattingFragment"
+            app:destination="@id/chattingFragment" />
+    </fragment>
 </navigation>

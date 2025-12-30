@@ -1,5 +1,6 @@
 package project.c14230225.c14230235
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -23,7 +24,7 @@ class ChatListAdapter(
     override fun onBindViewHolder(holder: ChatListViewHolder, position: Int) {
         val chatItem = chatList[position]
 
-        holder.tvUserEmail.text = chatItem.otherUserEmail
+        holder.tvUserEmail.text = chatItem.user2
         holder.tvLastMessage.text = chatItem.lastMessage
 
         // Format timestamp
@@ -42,6 +43,8 @@ class ChatListAdapter(
     fun updateList(newList: List<ChatList>) {
         chatList.clear()
         chatList.addAll(newList)
+        Log.d("chatlistfragment", "newlist = " + newList.size.toString())
+        Log.d("chatlistfragment", "chatList=" + chatList.size.toString())
         notifyDataSetChanged()
     }
 

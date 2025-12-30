@@ -53,6 +53,12 @@ class storeHomeFragment : Fragment() {
         setupFAB()
         loadProducts()
 
+        binding.btnChat.setOnClickListener {
+            val action = storeHomeFragmentDirections
+                .actionStoreHomeFragmentToChatListFragment()
+            findNavController().navigate(action)
+        }
+
         binding.btnDelHistory.setOnClickListener {
             val action = storeHomeFragmentDirections
                 .actionStoreHomeFragmentToDeletedFragment()
