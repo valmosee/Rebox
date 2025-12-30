@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
@@ -32,6 +33,8 @@ class DeletedFragment : Fragment() {
     private lateinit var binding: FragmentDeletedBinding
     private lateinit var db: FirebaseFirestore
     private lateinit var adapter: deletedAdapter
+    private lateinit var currentEmail: String
+    private val args: DeletedFragmentArgs by navArgs() // Use Safe Args
     private var listSepatu: MutableList<Sepatu> ?= mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,12 +68,14 @@ class DeletedFragment : Fragment() {
         binding.rvDeleted.layoutManager = LinearLayoutManager(requireContext())
         binding.rvDeleted.adapter = adapter
 
+        currentEmail = args.currentUserEmail
         loadProducts()
     }
 
     @SuppressLint("NotifyDataSetChanged")
     private fun loadProducts() {
         db.collection("deleted")
+            .whereEqualTo("sellerEmail", currentEmail)
             .get()
             .addOnSuccessListener { result ->
                 listSepatu?.clear()

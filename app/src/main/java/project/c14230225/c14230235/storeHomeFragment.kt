@@ -61,7 +61,7 @@ class storeHomeFragment : Fragment() {
 
         binding.btnDelHistory.setOnClickListener {
             val action = storeHomeFragmentDirections
-                .actionStoreHomeFragmentToDeletedFragment()
+                .actionStoreHomeFragmentToDeletedFragment(currentUserEmail)
             findNavController().navigate(action)
         }
 
