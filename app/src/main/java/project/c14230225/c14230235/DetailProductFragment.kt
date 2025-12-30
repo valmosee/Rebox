@@ -262,6 +262,7 @@ class DetailProductFragment : Fragment() {
         productDetail?.let { product ->
             binding.tvProductName.text = product.nama
             binding.tvPrice.text = "Rp ${product.harga}"
+            binding.btnSize38.text = product.ukuran
             binding.tvDeskripsi.text = product.deskripsi
 
             // Load Image
